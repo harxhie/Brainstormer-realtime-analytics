@@ -14,14 +14,26 @@ function App() {
 
   // Auto refresh every 2 seconds (realtime simulation)
   useEffect(() => {
-    fetchData();
+  fetchData();
 
-    const interval = setInterval(() => {
-      fetchData();
-    }, 2000);
+  const socket = new WebSocket("ws://127.0.0.1:8000/ws");
 
-    return () => clearInterval(interval);
-  }, []);
+  socket.onmessage = (event) => {
+  const message = JSON.parse(event.data);
+
+  if (message.type === "sentiment_update") {
+    setData((prev) =>
+      prev.map((item) =>
+        item.id === message.data.id ? message.data : item
+      )
+    );
+  }
+};
+
+
+  return () => socket.close();
+}, []);
+
 
   // Send message to backend
   const sendMessage = async () => {

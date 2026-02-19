@@ -23,13 +23,13 @@ function LineChartPanel({ data }) {
 
       <ResponsiveContainer width="100%" height={250}>
         <LineChart data={chartData}>
-          <XAxis dataKey="time" stroke="#94a3b8" />
-          <YAxis stroke="#94a3b8" />
+          <XAxis dataKey="time" stroke="#ffffff" />
+          <YAxis stroke="#c8c8c8" />
           <Tooltip />
           <Line
             type="monotone"
             dataKey="value"
-            stroke="#22c55e"
+            stroke="#ff4586"
             strokeWidth={2}
           />
         </LineChart>

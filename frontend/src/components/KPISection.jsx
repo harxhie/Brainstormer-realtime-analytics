@@ -33,7 +33,7 @@ function KPISection({ data }) {
 }
 
 const cardStyle = {
-  backgroundColor: "#1e293b",
+  backgroundColor: "#313131",
   padding: "20px",
   borderRadius: "10px",
 };

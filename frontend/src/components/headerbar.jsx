@@ -1,4 +1,4 @@
-function HeaderBar({ range, setRange }) {
+function HeaderBar({ range, setRange, status }) {
   return (
     <div
       style={{
@@ -9,7 +9,7 @@ function HeaderBar({ range, setRange }) {
       }}
     >
       {/* LEFT SIDE */}
-      <h2 style={{ color: "#94a3b8" }}>
+      <h2 style={{ color: "#6b6b6b" }}>
         Live Analytics
       </h2>
 
@@ -25,7 +25,7 @@ function HeaderBar({ range, setRange }) {
               border: "none",
               cursor: "pointer",
               backgroundColor:
-                range === r ? "#22c55e" : "#1e293b",
+                range === r ? "#ff4586" : "#313131",
               color: "white",
             }}
           >
@@ -34,16 +34,23 @@ function HeaderBar({ range, setRange }) {
         ))}
 
         {/* Live Badge */}
-        <span
-          style={{
-            backgroundColor: "#22c55e",
-            padding: "6px 10px",
-            borderRadius: "6px",
-            fontWeight: "bold",
-          }}
-        >
-          LIVE
-        </span>
+ <span
+  style={{
+    backgroundColor:
+      status === "ALERT"
+        ? "#ef4444"
+        : status === "WARNING"
+        ? "#f59e0b"
+        : "#3b90d6",
+    padding: "6px 10px",
+    borderRadius: "6px",
+    fontWeight: "bold",
+  }}
+>
+  {status}
+</span>
+
+
       </div>
     </div>
   );
