@@ -1,46 +1,48 @@
 import { useEffect, useState } from "react";
-import Dashboard from "./components/Dashboard";
-
+import Dashboard from "./components/dashboard.jsx";
 
 function App() {
   const [data, setData] = useState([]);
   const [text, setText] = useState("");
 
-  // Fetch messages from backend
+  // ✅ Environment-based URLs (WORKS EVERYWHERE)
+  const API_URL = import.meta.env.VITE_API_URL;
+  const WS_URL = import.meta.env.VITE_WS_URL;
+
   const fetchData = async () => {
-    const res = await fetch("http://127.0.0.1:8000/api/v1/data");
-    const result = await res.json();
-    setData(result);
+    try {
+      const res = await fetch(`${API_URL}/data`);
+      const result = await res.json();
+      setData(result);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  // Auto refresh every 2 seconds (realtime simulation)
   useEffect(() => {
-  fetchData();
+    fetchData();
 
-  const socket = new WebSocket("ws://localhost:8000/ws");
+    const socket = new WebSocket(WS_URL);
 
-  socket.onmessage = (event) => {
-  const message = JSON.parse(event.data);
+    socket.onmessage = (event) => {
+      const message = JSON.parse(event.data);
 
-  if (message.type === "sentiment_update") {
-    setData((prev) =>
-      prev.map((item) =>
-        item.id === message.data.id ? message.data : item
-      )
-    );
-  }
-};
+      if (message.type === "sentiment_update") {
+        setData((prev) =>
+          prev.map((item) =>
+            item.id === message.data.id ? message.data : item
+          )
+        );
+      }
+    };
 
+    return () => socket.close();
+  }, []);
 
-  return () => socket.close();
-}, []);
-
-
-  // Send message to backend
   const sendMessage = async () => {
     if (!text.trim()) return;
 
-    await fetch("http://127.0.0.1:8000/api/v1/data", {
+    await fetch(`${API_URL}/data`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
