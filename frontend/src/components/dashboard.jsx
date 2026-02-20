@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import HeaderBar from "./HeaderBar";
-import PieChartPanel from "./PieChartPanel";
+import HeaderBar from "./HeaderBar.jsx";
+import PieChartPanel from "./PieChartPanel.jsx";
 import KPISection from "./KPISection";
-import LineChartPanel from "./LineChartPanel";
+import LineChartPanel from "./LineChartPanel.jsx";
 
 function Dashboard({ data, text, setText, sendMessage }) {
   const [highlightId, setHighlightId] = useState(null);
