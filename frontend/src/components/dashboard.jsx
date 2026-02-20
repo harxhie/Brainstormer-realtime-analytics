@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import HeaderBar from "./HeaderBar.jsx";
 import PieChartPanel from "./PieChartPanel.jsx";
-import KPISection from "./KPISection";
+import KPISection from "./KPISection.jsx";
 import LineChartPanel from "./LineChartPanel.jsx";
 
 function Dashboard({ data, text, setText, sendMessage }) {
