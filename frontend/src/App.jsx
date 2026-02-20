@@ -1,72 +1,55 @@
 import { useEffect, useState } from "react";
 import Dashboard from "./components/Dashboard";
 
+
 function App() {
   const [data, setData] = useState([]);
   const [text, setText] = useState("");
 
-  // ✅ PRODUCTION BACKEND URL (Render)
-  const API_URL = "https://brainstormer-backend.onrender.com/api/v1";
-  const WS_URL = "wss://brainstormer-backend.onrender.com/ws";
-
-  // 🔄 Fetch messages from backend
+  // Fetch messages from backend
   const fetchData = async () => {
-    try {
-      const res = await fetch(`${API_URL}/data`);
-      const result = await res.json();
-      setData(result);
-    } catch (err) {
-      console.error("Fetch error:", err);
-    }
+    const res = await fetch("http://127.0.0.1:8000/api/v1/data");
+    const result = await res.json();
+    setData(result);
   };
 
-  // ⚡ Realtime WebSocket + Initial Load
+  // Auto refresh every 2 seconds (realtime simulation)
   useEffect(() => {
-    fetchData();
+  fetchData();
 
-    const socket = new WebSocket(WS_URL);
+  const socket = new WebSocket("ws://localhost:8000/ws");
 
-    socket.onmessage = (event) => {
-      try {
-        const message = JSON.parse(event.data);
+  socket.onmessage = (event) => {
+  const message = JSON.parse(event.data);
 
-        if (message.type === "sentiment_update") {
-          setData((prev) =>
-            prev.map((item) =>
-              item.id === message.data.id ? message.data : item
-            )
-          );
-        }
-      } catch (err) {
-        console.error("WebSocket parse error:", err);
-      }
-    };
+  if (message.type === "sentiment_update") {
+    setData((prev) =>
+      prev.map((item) =>
+        item.id === message.data.id ? message.data : item
+      )
+    );
+  }
+};
 
-    socket.onerror = () => {
-      console.log("WebSocket connection error");
-    };
 
-    return () => socket.close();
-  }, []);
+  return () => socket.close();
+}, []);
 
-  // 📤 Send message
+
+  // Send message to backend
   const sendMessage = async () => {
     if (!text.trim()) return;
 
-    try {
-      await fetch(`${API_URL}/data`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ text }),
-      });
+    await fetch("http://127.0.0.1:8000/api/v1/data", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ text }),
+    });
 
-      setText("");
-      fetchData();
-    } catch (err) {
-      console.error("Send error:", err);
-    }
+    setText("");
+    fetchData();
   };
 
   return (
